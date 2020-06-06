@@ -9,20 +9,26 @@
 </head>
 
 <body>
-    <header>
-        <!-- TODO -->
-        <a class="logo" href="">LOGO HERE</a>
-        <nav>
-            <a href>link1</a>
-            <a href>link1</a>
-            <a href>link1</a>
-            <a href>link1</a>
+    <div class="container">
+        <header class="centered">
+            LOGO HERE a centered header
+        </header>
+    </div>
+    <div class="container nav-container">
+        <nav class="centered">
+            <!-- TODO -->
+            <a href="">Home</a>
+            <a href>Upload</a>
+            <a href>Edit</a>
+            <a href>Browse</a>
+            <a class="push" href="">Register</a>
+            <a href="">Sign in</a>
         </nav>
-        <a class="push" href="">END1</a>
-        <a href="">END2</a>
-    </header>
-    <div class="body_container">
-        {% block body %}{% endblock body %}
+    </div>
+    <div class="container body_container">
+        <div class="centered body">
+            {% block body %}{% endblock body %}
+        </div>
     </div>
     <footer>
         <!-- TODO -->
