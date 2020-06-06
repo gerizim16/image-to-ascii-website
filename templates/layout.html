@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock title %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</head>
+
+<body>
+    <header>
+        <!-- TODO -->
+        <a class="logo" href="">LOGO HERE</a>
+        <nav>
+            <a href>link1</a>
+            <a href>link1</a>
+            <a href>link1</a>
+            <a href>link1</a>
+        </nav>
+        <a class="push" href="">END1</a>
+        <a href="">END2</a>
+    </header>
+    <div class="body_container">
+        {% block body %}{% endblock body %}
+    </div>
+    <footer>
+        <!-- TODO -->
+    </footer>
+</body>
+
+</html>
