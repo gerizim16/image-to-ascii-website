@@ -9,30 +9,41 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container container-header">
         <header class="centered">
-            LOGO HERE a centered header
+            <!-- TODO: add message flashing -->
+            LOGO HERE
         </header>
     </div>
-    <div class="container nav-container">
-        <nav class="centered">
+    <div class="container container-nav">
+        <nav class="container container-horizontal centered">
             <!-- TODO -->
-            <a href="">Home</a>
-            <a href>Upload</a>
-            <a href>Edit</a>
-            <a href>Browse</a>
-            <a class="push" href="">Register</a>
-            <a href="">Sign in</a>
+            <a href="/">Home</a>
+            {% if session.user_id %}
+            <a href="/upload">Upload</a>
+            <a href="/browse">Browse</a>
+            <a class="push" href="/logout">Log out</a>
+            {% else %}
+            <a class="push" href="/register">Register</a>
+            <a href="/login">Login</a>
+            {% endif %}
         </nav>
     </div>
-    <div class="container body_container">
-        <div class="centered body">
+    <div class="container container-body">
+        <div class="container container-body-inside container-vertical centered">
+            {% if get_flashed_messages() %}
+            <div class="flash">
+                {{ get_flashed_messages() | join(" ") }}
+            </div>
+            {% endif %}
             {% block body %}{% endblock body %}
         </div>
     </div>
-    <footer>
-        <!-- TODO -->
-    </footer>
+    <div class="container container-footer">
+        <footer class="centered">
+            <!-- TODO -->
+        </footer>
+    </div>
 </body>
 
 </html>
