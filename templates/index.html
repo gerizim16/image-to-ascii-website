@@ -1,6 +1,14 @@
 {% extends 'layout.html' %}
 
-{% block title %}Image to ASCII{% endblock title %}
+{% block title %}Browse{% endblock title %}
 
 {% block body %}
+<div class="img_viewer">
+    {% for row in data %}
+    <div>
+        <img src="uploads/images/{{ row['filename'] }}" alt="{{ row['filename'] }}">
+        <cite>by {{ row['username'] }}</cite>
+    </div>
+    {% endfor %}
+</div>
 {% endblock body %}

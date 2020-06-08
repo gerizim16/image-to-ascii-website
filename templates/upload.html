@@ -4,7 +4,11 @@
 
 {% block body %}
 <form class="container centered centered-small" action="/upload" enctype=multipart/form-data method="POST">
-    <input type="file" name="imagefile" id="imagefile" />
+    <input type="file" name="imagefile" id="imagefile" accept="image/png, image/jpeg">
+    <div>
+        <label for="imagebgcolor">Background color</label>
+        <input type="color" name="imagebgcolor" id="imagebgcolor">
+    </div>
     <button type="submit">Upload</button>
 </form>
 {% endblock body %}

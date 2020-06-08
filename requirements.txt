@@ -1,0 +1,6 @@
+colour
+Flask
+Flask-Session
+sqlite3
+Pillow
+numpy

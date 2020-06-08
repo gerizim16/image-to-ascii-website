@@ -11,8 +11,7 @@
 <body>
     <div class="container container-header">
         <header class="centered">
-            <!-- TODO: add message flashing -->
-            LOGO HERE
+            <h1>IMAGE TO ASCII ART</h1>
         </header>
     </div>
     <div class="container container-nav">
@@ -21,7 +20,6 @@
             <a href="/">Home</a>
             {% if session.user_id %}
             <a href="/upload">Upload</a>
-            <a href="/browse">Browse</a>
             <a class="push" href="/logout">Log out</a>
             {% else %}
             <a class="push" href="/register">Register</a>
@@ -41,7 +39,7 @@
     </div>
     <div class="container container-footer">
         <footer class="centered">
-            <!-- TODO -->
+            <p>some footer stuff | CS50 FINAL PROJECT | My first flask app</p>
         </footer>
     </div>
 </body>

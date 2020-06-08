@@ -1,15 +1,20 @@
 import sqlite3
 import os
+from colour import Color
+from datetime import datetime
 
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, send_from_directory
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
-from werkzeug.utils import secure_filename
 
 from helpers import login_required, allowed_file
+import imgpro
 
 app = Flask(__name__)
+
+# UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = 'uploads/images'
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -41,24 +46,32 @@ conn = sqlite3.connect(DATABASE_NAME)
 db = conn.cursor()
 db.execute("\
     CREATE TABLE IF NOT EXISTS users (\
-        username    TEXT    NOT NULL,\
+        username    TEXT    NOT NULL    UNIQUE,\
         hash        TEXT    NOT NULL\
-);")
-db.execute(
-    "CREATE UNIQUE INDEX IF NOT EXISTS username ON users (username);")
-db.close()
+        )\
+;")
+db.execute("\
+    CREATE TABLE IF NOT EXISTS images (\
+        user_rowid  INTEGER NOT NULL,\
+        filename    TEXT    NOT NULL,\
+        FOREIGN KEY(user_rowid) REFERENCES users(rowid)\
+        )\
+;")
 conn.close()
 
 
 @app.route('/')
 def index():
-    return render_template('index.html')
-
-
-@app.route('/browse')
-@login_required
-def browse():
-    return render_template('browse.html')
+    conn = sqlite3.connect(DATABASE_NAME)
+    conn.row_factory = sqlite3.Row
+    db = conn.cursor()
+    rows = db.execute(
+        "SELECT username, filename FROM users JOIN images ON users.rowid = images.user_rowid;"
+    ).fetchall()
+    conn.close()
+    if session.get('user_id') is None:
+        flash('Login or register to be able to upload')
+    return render_template('index.html', data=rows)
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -75,15 +88,36 @@ def upload():
             flash('No selected file')
             return render_template('upload.html')
         # Check if file type is allowed
-        if image_file and allowed_file(image_file.filename):
-            # Secure name
-            filename = secure_filename(image_file.filename)
+        if not allowed_file(image_file.filename):
+            flash('file type not supported')
+            return render_template('upload.html')
+        if image_file:
+            # Rename
+            extension = image_file.filename.rsplit('.', 1)[1].lower()
+            filename = "{}.{}".format(hash(datetime.now().timestamp()),
+                                      extension)
             # Save file
+            path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            image_file.save(path)
+            image_file.close()
+            # Process file
+            color = request.form.get('imagebgcolor')
+            color = Color(color)
+            imgpro.centerSquareCrop(path)
+            imgpro.asciiArt(path, path, bg=color.get_rgb())
+            # Save filename and owner to database
+            conn = sqlite3.connect(DATABASE_NAME)
+            db = conn.cursor()
+            db.execute(
+                "INSERT INTO images(user_rowid, filename) VALUES (?, ?);",
+                (session['user_id'], filename))
+            conn.commit()
+            conn.close()
             # Redirect to browse
-            redirect('/browse')
+            return redirect('/')
+        flash('unknown error')
 
-    else:
-        return render_template('upload.html')
+    return render_template('upload.html')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -168,7 +202,8 @@ def login():
         conn = sqlite3.connect(DATABASE_NAME)
         conn.row_factory = sqlite3.Row
         db = conn.cursor()
-        db.execute('SELECT rowid, * FROM users WHERE username = ?', (username, ))
+        db.execute('SELECT rowid, * FROM users WHERE username = ?',
+                   (username, ))
         rows = db.fetchall()
         db.close()
         conn.close()
@@ -197,6 +232,11 @@ def logout():
 
     # Redirect user to index
     return redirect('/')
+
+
+@app.route('/uploads/images/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
 if __name__ == '__main__':
