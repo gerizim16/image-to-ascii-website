@@ -49,11 +49,16 @@ body {
 
 .container-footer {
     width: 100%;
+    height: 40px;
     position: fixed;
     bottom: 0;
     background-color: #17252a;
     color: white;
     /* flex: 0 1 40px; */
+}
+
+.footer-space {
+    flex: 0 1 40px;
 }
 
 .container-body-inside {
