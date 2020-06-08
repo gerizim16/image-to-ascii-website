@@ -68,7 +68,7 @@ def index():
     conn.row_factory = sqlite3.Row
     db = conn.cursor()
     rows = db.execute(
-        "SELECT username, filename FROM users JOIN images ON users.rowid = images.user_rowid;"
+        "SELECT username, filename FROM users JOIN images ON users.rowid = images.user_rowid ORDER BY images.rowid DESC;"
     ).fetchall()
     conn.close()
     if session.get('user_id') is None:
