@@ -15,6 +15,8 @@ app = Flask(__name__)
 
 # UPLOAD_FOLDER
 app.config['UPLOAD_FOLDER'] = 'uploads/images'
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
