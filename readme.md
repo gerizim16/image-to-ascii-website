@@ -1,6 +1,8 @@
-# Image to ASCII website
+# [Image to ASCII website](https://github.com/gerizim16/image-to-ascii-website)
 
 This website allows uploading jpg/png images to be converted to an ASCII art. It also allows the browsing of all converted images.
+
+The repository can be found [here](https://github.com/gerizim16/image-to-ascii-website)
 
 ## Installation
 
